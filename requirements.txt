@@ -8,3 +8,5 @@ sentence-transformers
 pypdf
 google-generativeai
 torch
+fastapi
+uvicorn
