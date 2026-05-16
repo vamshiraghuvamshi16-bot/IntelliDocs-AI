@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="IntelliDocs AI",
     page_icon="✦",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # ─────────────────────────────────────────────────────────────
@@ -25,17 +25,17 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Always show sidebar toggle button */
+/* Sidebar open/close button */
 [data-testid="collapsedControl"] {
     display: flex !important;
     visibility: visible !important;
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 999999;
-    background: rgba(15,23,42,0.85);
-    border-radius: 10px;
-    padding: 6px;
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 999999 !important;
+    background: rgba(15,23,42,0.95) !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
 }
 
 /* Smooth sidebar animation */
