@@ -13,93 +13,316 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700;800&family=Instrument+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+    --bg:        #020812;
+    --bg2:       #060f20;
+    --border:    rgba(56,189,248,0.12);
+    --accent:    #38BDF8;
+    --accent2:   #818CF8;
+    --accent3:   #34D399;
+    --text:      #CBD5E1;
+    --text-dim:  rgba(148,163,184,0.55);
+    --glow:      rgba(56,189,248,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
 
 html, body, .stApp {
-    background-color: #050C1A !important;
-    font-family: 'Instrument Sans', sans-serif !important;
-    color: #C8D8F0 !important;
+    background-color: var(--bg) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    color: var(--text) !important;
 }
-#MainMenu, footer, header { visibility: hidden; }
-.block-container { max-width: 960px !important; padding: 1.5rem 2rem 5rem !important; }
-h1 {
-    font-family: 'Bricolage Grotesque', sans-serif !important;
-    font-size: 64px !important; font-weight: 800 !important;
-    text-align: center !important; color: #EFF6FF !important; letter-spacing: -2px !important;
-}
-.hero-sub { text-align: center; font-size: 17px; color: rgba(140,175,225,0.55); margin-bottom: 32px; }
-.grad-word {
-    background: linear-gradient(90deg, #60A5FA 0%, #38BDF8 50%, #818CF8 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.badge { display: block; text-align: center; margin-bottom: 16px; }
-.badge span {
-    background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.20);
-    border-radius: 100px; padding: 5px 18px; font-size: 11px;
-    letter-spacing: 2px; text-transform: uppercase; color: #38BDF8;
-}
-div[data-testid="stTextInput"] input {
-    background: rgba(10,20,50,0.85) !important;
-    border: 1px solid rgba(59,130,246,0.30) !important;
-    border-radius: 14px !important; color: #E2E8F0 !important;
-    padding: 16px 20px !important; font-size: 15px !important;
-}
-.answer-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 2px;
-    text-transform: uppercase; color: #3B82F6; margin-top: 25px; margin-bottom: 10px;
-}
-.src-head {
-    font-size: 10px; font-weight: 700; letter-spacing: 2px;
-    text-transform: uppercase; color: rgba(80,120,180,0.45); margin: 36px 0 14px;
-}
-section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #060E20 0%, #0A1628 100%) !important;
-    border-right: 1px solid rgba(59,130,246,0.15) !important;
-}
-section[data-testid="stSidebar"] * { color: #C8D8F0 !important; }
 
-/* model switcher top-right */
-.model-bar {
+/* animated mesh background */
+.stApp::before {
+    content: '';
     position: fixed;
-    top: 14px;
-    right: 24px;
-    z-index: 9999;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(56,189,248,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(129,140,248,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 60% 40%, rgba(52,211,153,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#MainMenu, footer, header { visibility: hidden; }
+
+.block-container {
+    max-width: 900px !important;
+    padding: 0 2rem 6rem !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── SIDEBAR ── */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(160deg, #040c1c 0%, #060f20 100%) !important;
+    border-right: 1px solid var(--border) !important;
+    position: relative;
+}
+section[data-testid="stSidebar"]::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 200px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.10) 0%, transparent 70%);
+    pointer-events: none;
+}
+section[data-testid="stSidebar"] * { color: var(--text) !important; }
+section[data-testid="stSidebar"] h2 {
+    font-family: 'Syne', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #F0F9FF !important;
+    letter-spacing: -0.5px !important;
+}
+section[data-testid="stSidebar"] .stSuccess {
+    background: rgba(52,211,153,0.08) !important;
+    border: 1px solid rgba(52,211,153,0.25) !important;
+    border-radius: 10px !important;
+}
+
+/* ── TOP-RIGHT MODEL PILL ── */
+div[data-testid="stSelectbox"] > label {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: var(--accent) !important;
+}
+div[data-testid="stSelectbox"] > div > div {
+    background: rgba(6,15,32,0.9) !important;
+    border: 1px solid rgba(56,189,248,0.30) !important;
+    border-radius: 50px !important;
+    color: #E2E8F0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 4px 14px !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 20px rgba(56,189,248,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: all 0.2s;
+}
+div[data-testid="stSelectbox"] > div > div:hover {
+    border-color: rgba(56,189,248,0.6) !important;
+    box-shadow: 0 0 30px rgba(56,189,248,0.15) !important;
+}
+
+/* ── HERO ── */
+.hero-wrap {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    position: relative;
+}
+.hero-wrap::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px; height: 200px;
+    background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56,189,248,0.05);
+    border: 1px solid rgba(56,189,248,0.20);
+    border-radius: 100px;
+    padding: 5px 16px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+.badge-dot {
+    width: 5px; height: 5px;
+    background: var(--accent3);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 6px var(--accent3);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: #F0F9FF;
+    margin-bottom: 16px;
+}
+.hero-title .g1 {
+    background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #34D399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ── STATS ROW ── */
+.stats-row {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 2rem 0;
+}
+.stat-item {
+    flex: 1;
+    padding: 18px 20px;
+    background: rgba(6,15,32,0.6);
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+.stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #F0F9FF;
+    letter-spacing: -1px;
+}
+.stat-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* ── SECTION HEADINGS ── */
+.section-head {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(6,14,32,0.92);
-    border: 1px solid rgba(59,130,246,0.25);
-    border-radius: 50px;
-    padding: 6px 16px 6px 12px;
-    backdrop-filter: blur(10px);
+    margin: 2rem 0 1rem;
 }
-.model-bar-label {
-    font-size: 11px;
-    color: rgba(96,165,250,0.8);
-    font-weight: 600;
-    letter-spacing: 1px;
+.section-head-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+}
+.section-head-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    white-space: nowrap;
+    color: var(--accent);
 }
-/* shrink the selectbox inside model bar */
-div[data-testid="stSelectbox"] {
-    min-width: 160px !important;
+
+/* ── UPLOAD AREA ── */
+div[data-testid="stFileUploader"] {
+    background: rgba(6,15,32,0.5) !important;
+    border: 1px dashed rgba(56,189,248,0.25) !important;
+    border-radius: 16px !important;
+    padding: 8px !important;
+    transition: all 0.3s;
 }
-div[data-testid="stSelectbox"] > div > div {
-    background: rgba(10,20,50,0.0) !important;
-    border: none !important;
+div[data-testid="stFileUploader"]:hover {
+    border-color: rgba(56,189,248,0.5) !important;
+    background: rgba(56,189,248,0.03) !important;
+}
+
+/* ── TEXT INPUT ── */
+div[data-testid="stTextInput"] input {
+    background: rgba(6,15,32,0.8) !important;
+    border: 1px solid rgba(56,189,248,0.20) !important;
+    border-radius: 14px !important;
     color: #E2E8F0 !important;
-    font-size: 13px !important;
-    padding: 0px 8px !important;
-    border-radius: 8px !important;
+    padding: 18px 22px !important;
+    font-size: 15px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 0 rgba(56,189,248,0);
+}
+div[data-testid="stTextInput"] input:focus {
+    border-color: rgba(56,189,248,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(56,189,248,0.08) !important;
+}
+div[data-testid="stTextInput"] input::placeholder { color: rgba(148,163,184,0.4) !important; }
+
+/* ── ANSWER BLOCK ── */
+.answer-wrap {
+    background: linear-gradient(135deg, rgba(6,15,32,0.9) 0%, rgba(8,18,36,0.9) 100%);
+    border: 1px solid rgba(56,189,248,0.15);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.answer-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.answer-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.answer-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ── SOURCE CARDS ── */
+.src-head {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 32px 0 14px;
+}
+div[data-testid="stContainer"] {
+    background: rgba(6,15,32,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+    transition: all 0.2s;
+}
+div[data-testid="stContainer"]:hover {
+    border-color: rgba(56,189,248,0.25) !important;
+    background: rgba(56,189,248,0.02) !important;
+}
+
+/* ── SUCCESS / INFO / WARNING ── */
+div[data-testid="stAlert"] {
+    border-radius: 12px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# TOP-RIGHT MODEL SWITCHER using columns trick
+# TOP-RIGHT MODEL SWITCHER
 # ─────────────────────────────────────────────────────────────
-col_gap, col_model = st.columns([6, 1])
+col_gap, col_model = st.columns([5, 1])
 with col_model:
     model_choice = st.selectbox(
         "🤖 Model",
@@ -112,27 +335,67 @@ with col_model:
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## ✦ IntelliDocs")
-    st.markdown("*Enterprise Knowledge Intelligence*")
+    st.markdown("<p style='font-size:12px;color:rgba(148,163,184,0.5);margin-top:-8px;margin-bottom:16px;'>Enterprise Knowledge Intelligence</p>", unsafe_allow_html=True)
     st.divider()
-    st.success("✓ System Online")
+
+    # Active model badge
+    if model_choice == "Groq Llama 3":
+        st.success("⚡ Groq Llama 3 Active")
+    else:
+        st.info("✦ Gemini 2.5 Flash Active")
+
     st.divider()
-    st.markdown("**Features**")
+    st.markdown("<p style='font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(56,189,248,0.7);'>Capabilities</p>", unsafe_allow_html=True)
     st.markdown("""
-- ✓ PDF Processing
-- ✓ Smart Chunking
-- ✓ HuggingFace Embeddings
-- ✓ ChromaDB Vector Store
-- ✓ Semantic Retrieval
-- ✓ AI-Powered Answers
-- ✓ Gemini + Groq Hybrid
+- ✦ Multi-PDF Ingestion
+- ✦ Smart Chunking
+- ✦ Vector Embeddings
+- ✦ Semantic Search
+- ✦ Cited AI Answers
+- ✦ Dual Model Support
 """)
+    st.divider()
+    st.markdown("<p style='font-size:10px;color:rgba(148,163,184,0.4);text-align:center;'>Built with LangChain + ChromaDB</p>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
 # HERO
 # ─────────────────────────────────────────────────────────────
-st.markdown('<div class="badge"><span>✦ Enterprise Knowledge Intelligence</span></div>', unsafe_allow_html=True)
-st.markdown('<h1>Intelli<span class="grad-word">Docs</span> AI</h1>', unsafe_allow_html=True)
-st.markdown('<p class="hero-sub">Ask anything. Get precise answers grounded in enterprise documents.</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="hero-wrap">
+    <div class="badge-pill">
+        <span class="badge-dot"></span>
+        Enterprise Knowledge Intelligence
+    </div>
+    <div class="hero-title">
+        Intelli<span class="g1">Docs</span> AI
+    </div>
+    <div class="hero-sub">
+        Upload your documents. Ask anything.<br>Get precise, cited answers in seconds.
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ── STATS ROW ──
+st.markdown("""
+<div class="stats-row">
+    <div class="stat-item">
+        <div class="stat-num">300</div>
+        <div class="stat-label">Chunk Size</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">MiniLM</div>
+        <div class="stat-label">Embeddings</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">ChromaDB</div>
+        <div class="stat-label">Vector Store</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">Top-3</div>
+        <div class="stat-label">Retrieval</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
 # IMPORTS
@@ -161,7 +424,6 @@ try:
     if os.path.exists(DB_PATH):
         db = Chroma(persist_directory=DB_PATH, embedding_function=embedding_model)
 
-    # LLM based on top-right selection
     if model_choice == "Gemini 2.5 Flash":
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
@@ -176,9 +438,15 @@ try:
         )
 
     # ── PDF UPLOAD ──
-    st.markdown("### Upload PDF Documents")
+    st.markdown("""
+    <div class="section-head">
+        <span class="section-head-text">📄 Upload Documents</span>
+        <div class="section-head-line"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
     uploaded_files = st.file_uploader(
-        "Drop one or more PDFs here",
+        "Drop PDFs here",
         type=["pdf"],
         accept_multiple_files=True,
         label_visibility="collapsed"
@@ -194,7 +462,7 @@ try:
             file_path = os.path.join("uploaded_docs", uploaded_file.name)
             with open(file_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
-            st.success(f"✓ Uploaded: {uploaded_file.name}")
+            st.success(f"✦ Indexed: {uploaded_file.name}")
             loader = PyPDFLoader(file_path)
             docs = loader.load()
             for doc in docs:
@@ -206,28 +474,33 @@ try:
             separators=["\n\n", "\n", " ", ""]
         )
         chunks = splitter.split_documents(all_documents)
-        st.info(f"Created {len(chunks)} chunks from {len(uploaded_files)} file(s)")
+        st.info(f"⚡ {len(chunks)} chunks created from {len(uploaded_files)} file(s) — ready to query")
 
         uploaded_db = Chroma.from_documents(
             documents=chunks,
             embedding=embedding_model,
             persist_directory="uploaded_vector_db"
         )
-        st.success("Temporary uploaded knowledge base created ✓")
 
     # ── QUESTION ──
-    st.markdown("### Ask a Question")
+    st.markdown("""
+    <div class="section-head">
+        <span class="section-head-text">💬 Ask a Question</span>
+        <div class="section-head-line"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
     question = st.text_input(
         "Question",
-        placeholder="e.g. What is the leave policy?",
+        placeholder="e.g. What is the refund policy? Summarize section 3...",
         label_visibility="collapsed"
     )
 
     if question:
         if uploaded_db is None and db is None:
-            st.warning("⚠ Please upload a PDF document first to ask questions.")
+            st.warning("⚠ Please upload a PDF document first.")
         else:
-            with st.spinner("Analyzing enterprise documents..."):
+            with st.spinner("Searching knowledge base..."):
                 if uploaded_db:
                     results = uploaded_db.similarity_search_with_score(question, k=3)
                 else:
@@ -247,20 +520,24 @@ Question:
                 response = llm.invoke(prompt)
                 answer = response.content
 
-            st.markdown('<div class="answer-label">AI Generated Answer</div>', unsafe_allow_html=True)
+            # ANSWER
+            st.markdown('<div class="answer-wrap"><div class="answer-label">✦ AI Answer</div>', unsafe_allow_html=True)
             st.markdown(answer)
-            st.markdown('<div class="src-head">Source Documents</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            # SOURCES
+            st.markdown('<div class="src-head">↳ Source References</div>', unsafe_allow_html=True)
 
             for i, (doc, score) in enumerate(results, 1):
                 filename = doc.metadata.get("filename", "Unknown Document")
-                excerpt = " ".join(doc.page_content.split())[:500]
+                excerpt = " ".join(doc.page_content.split())[:400]
                 with st.container(border=True):
                     col1, col2 = st.columns([7, 3])
                     with col1:
                         st.markdown(f"**📄 {filename}**")
                     with col2:
                         st.markdown(
-                            f"<p style='text-align:right;color:rgba(80,120,180,0.5);font-size:12px;'>Score: {round(score,3)}</p>",
+                            f"<p style='text-align:right;color:rgba(56,189,248,0.5);font-size:12px;font-weight:600;'>match {round((1-score)*100 if score<=1 else 100/score, 1)}%</p>",
                             unsafe_allow_html=True
                         )
                     st.caption(excerpt)
