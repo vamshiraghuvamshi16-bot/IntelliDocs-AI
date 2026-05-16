@@ -16,35 +16,10 @@ st.set_page_config(
     page_title="IntelliDocs AI",
     page_icon="✦",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"
 )
 
-# ─────────────────────────────────────────────────────────────
-# SIDEBAR TOGGLE BUTTON
-# ─────────────────────────────────────────────────────────────
-st.markdown("""
-<style>
-
-/* Sidebar open/close button */
-[data-testid="collapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    position: fixed !important;
-    top: 14px !important;
-    left: 14px !important;
-    z-index: 999999 !important;
-    background: rgba(15,23,42,0.95) !important;
-    border-radius: 12px !important;
-    padding: 8px !important;
-}
-
-/* Smooth sidebar animation */
-section[data-testid="stSidebar"] {
-    transition: all 0.3s ease-in-out;
-}
-
-</style>
-""", unsafe_allow_html=True)
+#
 
 # ─────────────────────────────────────────────────────────────
 # CSS
