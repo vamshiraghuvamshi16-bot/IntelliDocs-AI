@@ -1,11 +1,6 @@
 import streamlit as st
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_groq import ChatGroq
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
+import traceback
 
 DB_PATH = "vector_db"
 
@@ -57,57 +52,11 @@ div[data-testid="stTextInput"] input {
     font-size: 10px; font-weight: 700; letter-spacing: 2px;
     text-transform: uppercase; color: rgba(80,120,180,0.45); margin: 36px 0 14px;
 }
-
-/* ── SIDEBAR STYLES ── */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #060E20 0%, #0A1628 100%) !important;
     border-right: 1px solid rgba(59,130,246,0.15) !important;
 }
 section[data-testid="stSidebar"] * { color: #C8D8F0 !important; }
-
-.sidebar-logo {
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: #EFF6FF !important;
-    letter-spacing: -0.5px;
-    margin-bottom: 4px;
-}
-.sidebar-tagline {
-    font-size: 11px;
-    color: rgba(140,175,225,0.5) !important;
-    margin-bottom: 20px;
-}
-.sidebar-divider {
-    border: none;
-    border-top: 1px solid rgba(59,130,246,0.15);
-    margin: 16px 0;
-}
-.model-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(96,165,250,0.7) !important;
-    margin-bottom: 8px;
-}
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: rgba(200,216,240,0.75) !important;
-    padding: 4px 0;
-}
-.feature-dot {
-    width: 6px; height: 6px;
-    background: #38BDF8;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-/* selectbox styling */
 section[data-testid="stSidebar"] .stSelectbox > div > div {
     background: rgba(10,20,50,0.8) !important;
     border: 1px solid rgba(59,130,246,0.35) !important;
@@ -118,17 +67,14 @@ section[data-testid="stSidebar"] .stSelectbox > div > div {
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# SIDEBAR
+# SIDEBAR — always renders first, no imports needed here
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
+    st.markdown("## ✦ IntelliDocs")
+    st.markdown("*Enterprise Knowledge Intelligence*")
+    st.divider()
 
-    st.markdown('<div class="sidebar-logo">✦ IntelliDocs</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-tagline">Enterprise Knowledge Intelligence</div>', unsafe_allow_html=True)
-    st.markdown('<hr class="sidebar-divider">', unsafe_allow_html=True)
-
-    # Model Selection
-    st.markdown('<div class="model-label">🤖 Choose AI Model</div>', unsafe_allow_html=True)
-
+    st.markdown("**🤖 Choose AI Model**")
     model_choice = st.selectbox(
         "AI Model",
         ["Gemini 2.5 Flash", "Groq Llama 3"],
@@ -136,28 +82,24 @@ with st.sidebar:
     )
 
     if model_choice == "Gemini 2.5 Flash":
-        st.markdown("✦ **Gemini 2.5 Flash** — Google AI", unsafe_allow_html=True)
+        st.info("✦ Gemini 2.5 Flash — Google AI")
     else:
-        st.markdown("✦ **Llama 3.1 8B** — Groq (Fast)", unsafe_allow_html=True)
+        st.info("✦ Llama 3.1 8B — Groq (Fast)")
 
-    st.markdown('<hr class="sidebar-divider">', unsafe_allow_html=True)
-
-    # Status
+    st.divider()
     st.success("✓ System Online")
+    st.divider()
 
-    st.markdown('<hr class="sidebar-divider">', unsafe_allow_html=True)
-
-    # Features
-    st.markdown('<div class="model-label">Features</div>', unsafe_allow_html=True)
+    st.markdown("**Features**")
     st.markdown("""
-<div class="feature-item"><span class="feature-dot"></span> PDF Processing</div>
-<div class="feature-item"><span class="feature-dot"></span> Smart Chunking</div>
-<div class="feature-item"><span class="feature-dot"></span> HuggingFace Embeddings</div>
-<div class="feature-item"><span class="feature-dot"></span> ChromaDB Vector Store</div>
-<div class="feature-item"><span class="feature-dot"></span> Semantic Retrieval</div>
-<div class="feature-item"><span class="feature-dot"></span> AI-Powered Answers</div>
-<div class="feature-item"><span class="feature-dot"></span> Gemini + Groq Hybrid</div>
-""", unsafe_allow_html=True)
+- ✓ PDF Processing
+- ✓ Smart Chunking
+- ✓ HuggingFace Embeddings
+- ✓ ChromaDB Vector Store
+- ✓ Semantic Retrieval
+- ✓ AI-Powered Answers
+- ✓ Gemini + Groq Hybrid
+""")
 
 # ─────────────────────────────────────────────────────────────
 # HERO
@@ -167,19 +109,29 @@ st.markdown('<h1>Intelli<span class="grad-word">Docs</span> AI</h1>', unsafe_all
 st.markdown('<p class="hero-sub">Ask anything. Get precise answers grounded in enterprise documents.</p>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# MAIN APP
+# LAZY IMPORTS — inside try so import errors show clearly
 # ─────────────────────────────────────────────────────────────
+try:
+    from langchain_huggingface import HuggingFaceEmbeddings
+    from langchain_community.vectorstores import Chroma
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    from langchain_groq import ChatGroq
+    from langchain_community.document_loaders import PyPDFLoader
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+except Exception as e:
+    st.error(f"⚠ Import error: {e}")
+    st.code(traceback.format_exc())
+    st.stop()
+
 try:
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
-    # Safe Chroma init
     db = None
     if os.path.exists(DB_PATH):
         db = Chroma(persist_directory=DB_PATH, embedding_function=embedding_model)
 
-    # LLM
     if model_choice == "Gemini 2.5 Flash":
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
@@ -252,7 +204,6 @@ try:
                     results = db.similarity_search_with_score(question, k=3)
 
                 context = "\n\n".join([doc.page_content for doc, score in results])
-
                 prompt = f"""You are an enterprise AI assistant.
 Answer professionally and clearly using ONLY the context below.
 Write in readable paragraphs or bullet points.
@@ -263,7 +214,6 @@ Context:
 
 Question:
 {question}"""
-
                 response = llm.invoke(prompt)
                 answer = response.content
 
@@ -287,3 +237,4 @@ Question:
 
 except Exception as e:
     st.error(f"⚠ System error: {e}")
+    st.code(traceback.format_exc())
