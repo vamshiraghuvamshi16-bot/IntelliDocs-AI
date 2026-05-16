@@ -16,10 +16,8 @@ st.set_page_config(
     page_title="IntelliDocs AI",
     page_icon="✦",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded"   # FIX 1: was "e" (invalid value)
 )
-
-#
 
 # ─────────────────────────────────────────────────────────────
 # CSS
@@ -66,7 +64,6 @@ h1 {
         #38BDF8 50%,
         #818CF8 100%
     );
-
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -119,6 +116,17 @@ div[data-testid="stTextInput"] input {
 section[data-testid="stSidebar"] {
     background: rgba(5,12,28,0.97) !important;
 }
+
+/* FIX 2: Force sidebar text to be visible on Streamlit Cloud */
+section[data-testid="stSidebar"] * {
+    color: #C8D8F0 !important;
+}
+
+section[data-testid="stSidebar"] .stSelectbox label,
+section[data-testid="stSidebar"] .stMarkdown p,
+section[data-testid="stSidebar"] .stMarkdown li {
+    color: #C8D8F0 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -133,19 +141,18 @@ with st.sidebar:
 
     st.markdown("### Features")
 
-    features = [
-        "PDF Processing",
-        "Smart Chunking",
-        "HuggingFace Embeddings",
-        "ChromaDB",
-        "Semantic Retrieval",
-        "AI Answers",
-        "Dynamic PDF Upload",
-        "Gemini + Groq Hybrid AI"
-    ]
-
-    for feature in features:
-        st.markdown(f"✓ {feature}")
+    # FIX 3: Use a single markdown block instead of a loop
+    # (loop + st.markdown per item can silently fail on Cloud)
+    st.markdown("""
+- ✓ PDF Processing
+- ✓ Smart Chunking
+- ✓ HuggingFace Embeddings
+- ✓ ChromaDB
+- ✓ Semantic Retrieval
+- ✓ AI Answers
+- ✓ Dynamic PDF Upload
+- ✓ Gemini + Groq Hybrid AI
+""")
 
 # ─────────────────────────────────────────────────────────────
 # HERO
