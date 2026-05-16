@@ -15,7 +15,8 @@ DB_PATH = "vector_db"
 st.set_page_config(
     page_title="IntelliDocs AI",
     page_icon="✦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # ─────────────────────────────────────────────────────────────
@@ -24,13 +25,20 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Show sidebar collapse button */
+/* Always show sidebar toggle button */
 [data-testid="collapsedControl"] {
     display: flex !important;
     visibility: visible !important;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 999999;
+    background: rgba(15,23,42,0.85);
+    border-radius: 10px;
+    padding: 6px;
 }
 
-/* Sidebar animation */
+/* Smooth sidebar animation */
 section[data-testid="stSidebar"] {
     transition: all 0.3s ease-in-out;
 }
@@ -254,24 +262,20 @@ try:
                 uploaded_file.name
             )
 
-            # Save uploaded PDF
             with open(file_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
 
             st.success(f"✓ Uploaded: {uploaded_file.name}")
 
-            # Load PDF
             loader = PyPDFLoader(file_path)
 
             docs = loader.load()
 
-            # Metadata
             for doc in docs:
                 doc.metadata["filename"] = uploaded_file.name
 
             all_documents.extend(docs)
 
-        # Smart Chunking
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=300,
             chunk_overlap=50,
@@ -284,7 +288,6 @@ try:
             f"Created {len(chunks)} chunks from {len(uploaded_files)} file(s)"
         )
 
-        # Temporary uploaded vector DB
         uploaded_db_path = "uploaded_vector_db"
 
         uploaded_db = Chroma.from_documents(
@@ -312,7 +315,6 @@ try:
 
         with st.spinner("Analyzing enterprise documents..."):
 
-            # Retrieval logic
             if uploaded_db:
 
                 results = uploaded_db.similarity_search_with_score(
@@ -327,12 +329,10 @@ try:
                     k=3
                 )
 
-            # Context
             context = "\n\n".join(
                 [doc.page_content for doc, score in results]
             )
 
-            # Prompt
             prompt = f"""
 You are an enterprise AI assistant.
 
@@ -349,7 +349,6 @@ Question:
 {question}
 """
 
-            # LLM response
             response = llm.invoke(prompt)
 
             answer = response.content
