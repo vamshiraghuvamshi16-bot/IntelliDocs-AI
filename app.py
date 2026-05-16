@@ -19,6 +19,26 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────────────────────
+# SIDEBAR TOGGLE BUTTON
+# ─────────────────────────────────────────────────────────────
+st.markdown("""
+<style>
+
+/* Show sidebar collapse button */
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* Sidebar animation */
+section[data-testid="stSidebar"] {
+    transition: all 0.3s ease-in-out;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────────────────────
 # CSS
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
@@ -181,7 +201,6 @@ try:
     # ─────────────────────────────────────────
     # MODEL SELECTION
     # ─────────────────────────────────────────
-
     model_choice = st.sidebar.selectbox(
         "Choose AI Model",
         [
@@ -195,14 +214,15 @@ try:
 
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
-            temperature=0
+            temperature=0,
+            google_api_key=st.secrets["GOOGLE_API_KEY"]
         )
 
     # Groq
     else:
 
         llm = ChatGroq(
-            groq_api_key=os.getenv("GROQ_API_KEY"),
+            groq_api_key=st.secrets["GROQ_API_KEY"],
             model_name="llama-3.1-8b-instant",
             temperature=0
         )
