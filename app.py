@@ -2,6 +2,7 @@ import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
@@ -125,7 +126,7 @@ with st.sidebar:
 
     st.markdown("## ✦ IntelliDocs")
 
-    st.success("Gemini 2.5 Flash Active")
+    st.success("Hybrid AI System Active")
 
     st.markdown("### Features")
 
@@ -136,7 +137,8 @@ with st.sidebar:
         "ChromaDB",
         "Semantic Retrieval",
         "AI Answers",
-        "Dynamic PDF Upload"
+        "Dynamic PDF Upload",
+        "Gemini + Groq Hybrid AI"
     ]
 
     for feature in features:
@@ -176,11 +178,34 @@ try:
         embedding_function=embedding_model
     )
 
-    # Gemini LLM
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0
+    # ─────────────────────────────────────────
+    # MODEL SELECTION
+    # ─────────────────────────────────────────
+
+    model_choice = st.sidebar.selectbox(
+        "Choose AI Model",
+        [
+            "Gemini 2.5 Flash",
+            "Groq Llama 3"
+        ]
     )
+
+    # Gemini
+    if model_choice == "Gemini 2.5 Flash":
+
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash",
+            temperature=0
+        )
+
+    # Groq
+    else:
+
+        llm = ChatGroq(
+            groq_api_key=os.getenv("GROQ_API_KEY"),
+            model_name="llama-3.1-8b-instant",
+            temperature=0
+        )
 
     # ─────────────────────────────────────────
     # PDF UPLOAD
@@ -239,10 +264,7 @@ try:
             f"Created {len(chunks)} chunks from {len(uploaded_files)} file(s)"
         )
 
-        # ─────────────────────────────────────────
-        # TEMPORARY VECTOR DATABASE
-        # ─────────────────────────────────────────
-
+        # Temporary uploaded vector DB
         uploaded_db_path = "uploaded_vector_db"
 
         uploaded_db = Chroma.from_documents(
@@ -270,24 +292,19 @@ try:
 
         with st.spinner("Analyzing enterprise documents..."):
 
-            # ─────────────────────────────────────────
-            # RETRIEVAL LOGIC
-            # ─────────────────────────────────────────
-
-            # Use uploaded DB if files uploaded
+            # Retrieval logic
             if uploaded_db:
 
                 results = uploaded_db.similarity_search_with_score(
                     question,
-                    k=5
+                    k=3
                 )
 
-            # Otherwise use permanent enterprise DB
             else:
 
                 results = db.similarity_search_with_score(
                     question,
-                    k=5
+                    k=3
                 )
 
             # Context
@@ -312,7 +329,7 @@ Question:
 {question}
 """
 
-            # Gemini response
+            # LLM response
             response = llm.invoke(prompt)
 
             answer = response.content
