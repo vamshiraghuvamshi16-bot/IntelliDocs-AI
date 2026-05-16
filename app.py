@@ -57,39 +57,65 @@ section[data-testid="stSidebar"] {
     border-right: 1px solid rgba(59,130,246,0.15) !important;
 }
 section[data-testid="stSidebar"] * { color: #C8D8F0 !important; }
-section[data-testid="stSidebar"] .stSelectbox > div > div {
-    background: rgba(10,20,50,0.8) !important;
-    border: 1px solid rgba(59,130,246,0.35) !important;
-    border-radius: 10px !important;
+
+/* model switcher top-right */
+.model-bar {
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(6,14,32,0.92);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 50px;
+    padding: 6px 16px 6px 12px;
+    backdrop-filter: blur(10px);
+}
+.model-bar-label {
+    font-size: 11px;
+    color: rgba(96,165,250,0.8);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+/* shrink the selectbox inside model bar */
+div[data-testid="stSelectbox"] {
+    min-width: 160px !important;
+}
+div[data-testid="stSelectbox"] > div > div {
+    background: rgba(10,20,50,0.0) !important;
+    border: none !important;
     color: #E2E8F0 !important;
+    font-size: 13px !important;
+    padding: 0px 8px !important;
+    border-radius: 8px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# SIDEBAR — always renders first, no imports needed here
+# TOP-RIGHT MODEL SWITCHER using columns trick
+# ─────────────────────────────────────────────────────────────
+col_gap, col_model = st.columns([6, 1])
+with col_model:
+    model_choice = st.selectbox(
+        "🤖 Model",
+        ["Groq Llama 3", "Gemini 2.5 Flash"],
+        label_visibility="visible"
+    )
+
+# ─────────────────────────────────────────────────────────────
+# SIDEBAR
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## ✦ IntelliDocs")
     st.markdown("*Enterprise Knowledge Intelligence*")
     st.divider()
-
-    st.markdown("**🤖 Choose AI Model**")
-    model_choice = st.selectbox(
-        "AI Model",
-        ["Gemini 2.5 Flash", "Groq Llama 3"],
-        label_visibility="collapsed"
-    )
-
-    if model_choice == "Gemini 2.5 Flash":
-        st.info("✦ Gemini 2.5 Flash — Google AI")
-    else:
-        st.info("✦ Llama 3.1 8B — Groq (Fast)")
-
-    st.divider()
     st.success("✓ System Online")
     st.divider()
-
     st.markdown("**Features**")
     st.markdown("""
 - ✓ PDF Processing
@@ -109,7 +135,7 @@ st.markdown('<h1>Intelli<span class="grad-word">Docs</span> AI</h1>', unsafe_all
 st.markdown('<p class="hero-sub">Ask anything. Get precise answers grounded in enterprise documents.</p>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# LAZY IMPORTS — inside try so import errors show clearly
+# IMPORTS
 # ─────────────────────────────────────────────────────────────
 try:
     from langchain_huggingface import HuggingFaceEmbeddings
@@ -123,6 +149,9 @@ except Exception as e:
     st.code(traceback.format_exc())
     st.stop()
 
+# ─────────────────────────────────────────────────────────────
+# MAIN APP
+# ─────────────────────────────────────────────────────────────
 try:
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -132,6 +161,7 @@ try:
     if os.path.exists(DB_PATH):
         db = Chroma(persist_directory=DB_PATH, embedding_function=embedding_model)
 
+    # LLM based on top-right selection
     if model_choice == "Gemini 2.5 Flash":
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
