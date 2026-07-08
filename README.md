@@ -35,7 +35,7 @@ AI System Design
 
 Rather than creating another chatbot, I developed a complete AI document assistant similar to enterprise solutions like ChatPDF, Notion AI, and Microsoft Copilot for internal documentation.
 
-## System Workflow
+ System Workflow
           <img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/0641edd5-e8c6-4d33-91c8-932d867ee1bc" />
 
 
