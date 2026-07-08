@@ -1,5 +1,5 @@
-🚀 IntelliDocs AI – Enterprise Retrieval-Augmented Generation (RAG) Platform
-📌 Project Overview
+# IntelliDocs AI – Enterprise Retrieval-Augmented Generation (RAG) Platform
+## Project Overview
 
 Modern organizations manage thousands of PDF documents such as policies, contracts, research papers, technical manuals, and reports. Finding accurate information from these documents is often slow, manual, and inefficient.
 
@@ -7,7 +7,7 @@ IntelliDocs AI solves this problem by transforming unstructured PDF documents in
 
 The system combines Retrieval-Augmented Generation (RAG) with semantic search to ensure answers are generated only from the uploaded documents, reducing hallucinations and improving trustworthiness.
 
-🎯 Problem Statement
+ ## Problem Statement
 
 Traditional document search relies on keyword matching.
 
@@ -20,7 +20,7 @@ Enterprise documents require accurate and traceable answers.
 
 This project addresses these challenges by retrieving relevant document sections before generating responses.
 
-💡 Why I Built This Project
+Why I Built This Project
 
 I wanted to build an enterprise-level AI application that demonstrates practical knowledge of:
 
@@ -35,7 +35,7 @@ AI System Design
 
 Rather than creating another chatbot, I developed a complete AI document assistant similar to enterprise solutions like ChatPDF, Notion AI, and Microsoft Copilot for internal documentation.
 
-🏗️ System Workflow
+## System Workflow
           <img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/0641edd5-e8c6-4d33-91c8-932d867ee1bc" />
 
 
@@ -48,7 +48,7 @@ Enterprise documents are usually stored as PDF files.
 
 PyPDFLoader extracts the text while preserving metadata like page numbers and filenames, making source attribution possible.
 
-✂ RecursiveCharacterTextSplitter
+## RecursiveCharacterTextSplitter
 Why?
 
 Large Language Models have token limitations.
@@ -80,7 +80,7 @@ HuggingFace Embeddings
 
 Model Used
 
-sentence-transformers/all-MiniLM-L6-v2
+## sentence-transformers/all-MiniLM-L6-v2
 Why?
 
 LLMs cannot directly search text efficiently.
@@ -206,7 +206,7 @@ Enterprise UI
 
 making the project easy to demonstrate.
 
-🔄 End-to-End Execution Process
+## End-to-End Execution Process
 Step 1
 
 User uploads one or more PDF documents.
