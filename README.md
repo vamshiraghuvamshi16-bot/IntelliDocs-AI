@@ -39,7 +39,7 @@ Rather than creating another chatbot, I developed a complete AI document assista
           <img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/0641edd5-e8c6-4d33-91c8-932d867ee1bc" />
 
 
-Why I Used Each Technology
+## Why I Used Each Technology
 
  PyPDFLoader
 Why?
@@ -99,7 +99,7 @@ Users may change credentials from the security settings.
 
 Although keywords differ, semantic embeddings identify both as having the same meaning.
 
-🗄 Chroma Vector Database
+## Chroma Vector Database
 Why?
 
 Searching thousands of text chunks linearly would be slow.
@@ -122,7 +122,7 @@ Password
 
 Password
 
-Semantic Search understands meaning.
+## Semantic Search understands meaning.
 
 For example,
 
@@ -136,7 +136,7 @@ Reset your password using account settings.
 
 even though "recover" never appears.
 
- Gemini 2.5 Flash
+ ## Gemini 2.5 Flash
 Why?
 
 Gemini provides
@@ -150,7 +150,7 @@ Instead of answering from general knowledge, it receives only the retrieved docu
 
 This significantly reduces hallucinations.
 
- LangChain
+ ## LangChain
 
 LangChain connects every component together.
 
@@ -164,7 +164,7 @@ Retrieval Pipeline
 
 without requiring complex custom orchestration.
 
-FastAPI
+## FastAPI
 Why?
 
 FastAPI exposes the AI pipeline as REST APIs.
@@ -191,7 +191,7 @@ Answer
 Sources
 
 Similarity Scores
-🎨 Streamlit
+## Streamlit
 Why?
 
 I wanted recruiters and users to interact with the AI system without writing API calls.
